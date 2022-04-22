@@ -71,6 +71,11 @@ public class PlayerMovement : MonoBehaviour
             playerPhysics.useGravity = true;
         }
     }
+
+    void Disparar()
+    {
+        aux
+    }
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Ground")
