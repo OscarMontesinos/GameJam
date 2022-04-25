@@ -12,7 +12,7 @@ public class Proyectil : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        float aux = Random.RandomRange(-detour, detour);
+        float aux = Random.Range(-detour, detour);
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y - aux, transform.eulerAngles.z);
     }
 
@@ -22,7 +22,7 @@ public class Proyectil : MonoBehaviour
         transform.Translate(Vector3.forward * speed * Time.deltaTime);
 
         tiempo += Time.deltaTime;
-        if (tiempo >= lifetime*5)
+        if (tiempo >= lifetime*2.5)
         {
             Destroy(gameObject);
         }

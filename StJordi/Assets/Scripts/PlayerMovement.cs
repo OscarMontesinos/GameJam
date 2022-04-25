@@ -11,23 +11,59 @@ public class PlayerMovement : MonoBehaviour
     float verticalInput = 0;
     public Camera cam;
     public GameObject bala;
+    public GameObject fuego;
+    public int fireDelay;
     public GameObject hitboxEscopeta;
     bool saltando;
     public float alturaSalto;
     public float speedSalto;
+    public float recargaEscopeta;
+    float currentRecargaEscopeta;
+    public int balas;
+    public float fuegoMun;
+    public float fireSpeed;
+    public Arma arma;
+    public bool lanzallamas;
     // Start is called before the first frame update
     void Start()
     {
         playerPhysics = GetComponent<Rigidbody>();
         cam = FindObjectOfType<Camera>();
         hitboxEscopeta = transform.GetChild(0).gameObject;
+        balas = 2;
+        fuegoMun = 25;
     }
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (currentRecargaEscopeta > 0)
+        {
+            currentRecargaEscopeta -= Time.deltaTime;
+        }
+        if (Input.GetMouseButton(1) && currentRecargaEscopeta<=0&&fuegoMun>0 & lanzallamas)
+        {
+            fuegoMun -= Time.deltaTime*fireSpeed;
+
+            int aux = Random.Range(0, fireDelay + 1);
+            if (aux == fireDelay)
+            {
+                Instantiate(fuego, transform.position, transform.rotation);
+            }
+
+            arma.lanzallamas = true;
+        }
+        if (Input.GetMouseButton(0) && !Input.GetMouseButton(1) && currentRecargaEscopeta <= 0 && balas >0)
         {
             Disparar();
+            arma.escopeta = true;
+        }
+        if (Input.GetMouseButtonUp(1))
+        {
+            arma.lanzallamas = false;
+        }
+        if (Input.GetMouseButtonDown(1))
+        {
+            fuegoMun -= 5;
         }
     }
 
@@ -45,11 +81,13 @@ public class PlayerMovement : MonoBehaviour
 
             movement = new Vector3(horizontalInput, 0, verticalInput);
         }
+        var wantedPos = new Vector3(0, 0, 0);
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit raycastHit))
+        {
+            wantedPos = raycastHit.point;
+        }
 
-
-        var mousePos = Input.mousePosition;
-        var wantedPos = cam.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, cam.transform.position.y));
-        
         transform.LookAt(wantedPos, Vector3.down);
 
         //transform.eulerAngles = new Vector3(0, 0, 0);
@@ -61,9 +99,9 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKey(KeyCode.Space) && saltando == false)
         {
             StartCoroutine(Salto());
-           
-        }
 
+        }
+    }
         IEnumerator Salto()
         {
             saltando = true;
@@ -76,18 +114,42 @@ public class PlayerMovement : MonoBehaviour
                 recorrido += Time.deltaTime * speedSalto;
                 yield return null;
             }
-            yield return new WaitForSeconds(0.3f);
+            yield return new WaitForSeconds(0.1f);
             playerPhysics.useGravity = true;
         }
-    }
+    
 
     void Disparar()
     {
+        fuegoMun += 10;
+        if (fuegoMun > 50)
+        {
+            fuegoMun = 50;
+        }
+        balas--;
+        if(balas == 0)
+        {
+            StartCoroutine(Recarga());
+        }
+        currentRecargaEscopeta = recargaEscopeta;
+        //Podría usar un bucle al igual que G2 pudo ganar a Fun Plus Phoenix
         Instantiate(bala,transform.position,transform.rotation);
         Instantiate(bala,transform.position,transform.rotation);
         Instantiate(bala,transform.position,transform.rotation);
         Instantiate(bala,transform.position,transform.rotation);
         Instantiate(bala,transform.position,transform.rotation);
+        StartCoroutine(DisparoReset());
+    }
+
+    IEnumerator DisparoReset()
+    {
+        yield return null;
+        arma.escopeta = false;
+    }
+    IEnumerator Recarga()
+    {
+        yield return new WaitForSeconds(1.3f);
+        balas = 2;
     }
     private void OnCollisionEnter(Collision collision)
     {
