@@ -10,7 +10,7 @@ public class PlayerMovement : MonoBehaviour
     float horizontalInput = 0;
     float verticalInput = 0;
     public Camera cam;
-    public GameObject flecha;
+    public GameObject bala;
     public GameObject hitboxEscopeta;
     bool saltando;
     public float alturaSalto;
@@ -20,6 +20,15 @@ public class PlayerMovement : MonoBehaviour
     {
         playerPhysics = GetComponent<Rigidbody>();
         cam = FindObjectOfType<Camera>();
+        hitboxEscopeta = transform.GetChild(0).gameObject;
+    }
+
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Disparar();
+        }
     }
 
     // Update is called once per frame
@@ -67,14 +76,18 @@ public class PlayerMovement : MonoBehaviour
                 recorrido += Time.deltaTime * speedSalto;
                 yield return null;
             }
-            yield return new WaitForSeconds(0.8f);
+            yield return new WaitForSeconds(0.3f);
             playerPhysics.useGravity = true;
         }
     }
 
     void Disparar()
     {
-        aux
+        Instantiate(bala,transform.position,transform.rotation);
+        Instantiate(bala,transform.position,transform.rotation);
+        Instantiate(bala,transform.position,transform.rotation);
+        Instantiate(bala,transform.position,transform.rotation);
+        Instantiate(bala,transform.position,transform.rotation);
     }
     private void OnCollisionEnter(Collision collision)
     {

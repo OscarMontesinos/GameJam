@@ -12,32 +12,6 @@ public class Unit : MonoBehaviour
     public Text vida;
     bool menu = false;
     // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (menu == false)
-            {
-                canvas.SetActive(true);
-                menu = true;
-                Time.timeScale = 0;
-            }
-            else
-            {
-                canvas.SetActive(false);
-                menu = false;
-                Time.timeScale = 1;
-            }
-        }
-
-        vida.text = "HP: " + hp;
-    }
 
     public void TakeDmg(int dmg)
     {
@@ -60,7 +34,7 @@ public class Unit : MonoBehaviour
 
     IEnumerator Deinmunizar()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
         inmune = false;
     }
 
