@@ -61,7 +61,7 @@ public class PlayerMovement : MonoBehaviour
         {
             arma.lanzallamas = false;
         }
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(1) && fuegoMun>0)
         {
             fuegoMun -= 5;
         }
