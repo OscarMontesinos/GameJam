@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
     public float forceSpeed = 0;
+    public float mForceSpeed;
     public Rigidbody playerPhysics;
     Vector3 movement;
     float horizontalInput = 0;
@@ -12,6 +14,7 @@ public class PlayerMovement : MonoBehaviour
     public Camera cam;
     public GameObject bala;
     public GameObject fuego;
+    public GameObject particolas;
     public int fireDelay;
     public GameObject hitboxEscopeta;
     bool saltando;
@@ -26,6 +29,8 @@ public class PlayerMovement : MonoBehaviour
     public bool lanzallamas;
     public bool envenenado;
     Animator animator;
+    public Text lanzallamasText;
+    public Text balasText;
     // Start is called before the first frame update
     void Start()
     {
@@ -35,15 +40,28 @@ public class PlayerMovement : MonoBehaviour
         balas = 2;
         fuegoMun = 25;
         animator = GetComponent<Animator>();
+        mForceSpeed = forceSpeed;
     }
 
     private void Update()
     {
+        if(Input.GetKey(KeyCode.W)|| Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
+        {
+            int aux = Random.Range(0, fireDelay + 1);
+            if (aux == fireDelay)
+            {
+                Instantiate(particolas, transform.position, transform.rotation);
+            }
+        }
+        lanzallamasText = transform.GetChild(7).transform.GetChild(0).transform.GetChild(1).GetComponent<Text>();
+        balasText = transform.GetChild(7).transform.GetChild(0).transform.GetChild(0).GetComponent<Text>();
+        balasText.text = balas.ToString() + "/2";
+        lanzallamasText.text = fuegoMun.ToString("0") + "/50";
         if (currentRecargaEscopeta > 0)
         {
             currentRecargaEscopeta -= Time.deltaTime;
         }
-        if (Input.GetMouseButton(1) && currentRecargaEscopeta<=0&&fuegoMun>0 & lanzallamas)
+        if (Input.GetMouseButton(1) && currentRecargaEscopeta <=0 && fuegoMun>0 & lanzallamas && balas > 0)
         {
             fuegoMun -= Time.deltaTime*fireSpeed;
 
@@ -55,7 +73,7 @@ public class PlayerMovement : MonoBehaviour
 
             arma.lanzallamas = true;
         }
-        if (Input.GetMouseButton(0) && !Input.GetMouseButton(1) && currentRecargaEscopeta <= 0 && balas >0)
+        if (Input.GetMouseButton(0) && !Input.GetMouseButton(1) && currentRecargaEscopeta <= 0 && balas > 0)
         {
             Disparar();
             arma.escopeta = true;
@@ -64,10 +82,11 @@ public class PlayerMovement : MonoBehaviour
         {
             arma.lanzallamas = false;
         }
-        if (Input.GetMouseButtonDown(1) && fuegoMun>0)
+        if (Input.GetMouseButtonDown(1) && fuegoMun>0 && balas > 0)
         {
             fuegoMun -= 5;
         }
+
     }
 
     // Update is called once per frame

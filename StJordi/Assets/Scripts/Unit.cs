@@ -13,10 +13,14 @@ public class Unit : MonoBehaviour
     bool menu = false;
     public float speed;
     float mSpeed;
-    PlayerMovement player;
+    public PlayerMovement player;
     bool golpeando;
     public float rango;
     public bool isZombie;
+    public bool zona1;
+    public bool zona2;
+    public bool zona3;
+    public bool zona4;
 
     // Start is called before the first frame update
     private void Awake()
@@ -24,8 +28,9 @@ public class Unit : MonoBehaviour
         mSpeed = speed;
         player = FindObjectOfType<PlayerMovement>();
     }
-    public void TakeDmg(int dmg)
+    virtual public void TakeDmg(int dmg)
     {
+        StartCoroutine(GolpearVelocidad());
         if (!inmune)
         {
             hp -= dmg; 
@@ -41,7 +46,7 @@ public class Unit : MonoBehaviour
             }
         }
     }
-    private void Update()
+    virtual public void Update()
     {
 
         igniteSecCalc -= Time.deltaTime;
@@ -58,12 +63,13 @@ public class Unit : MonoBehaviour
 
         if (!isPlayer && isZombie)
         {
-            var dist = player.transform.position - transform.position;
-            transform.Translate(dist.normalized * speed * Time.deltaTime);
-            if (dist.magnitude < rango && !golpeando)
-            {
-                StartCoroutine(Golpear());
-            }
+            if (zona1 && player.GetComponent<Unit>().zona1 || zona3 && player.GetComponent<Unit>().zona3 || zona2 && player.GetComponent<Unit>().zona2 || zona1 && player.GetComponent<Unit>().zona1) {
+                var dist = player.transform.position - transform.position;
+                transform.Translate(dist.normalized * speed * Time.deltaTime);
+                if (dist.magnitude < rango && !golpeando)
+                {
+                    StartCoroutine(Golpear());
+                } }
         }
 
     }
@@ -72,7 +78,22 @@ public class Unit : MonoBehaviour
     {
         igniteSec = 3;
     }
-    IEnumerator Golpear()
+    IEnumerator GolpearVelocidad()
+    {
+        if (!isPlayer)
+        {
+            speed = 0;
+            yield return new WaitForSeconds(0.2f);
+            speed = mSpeed;
+        }
+        else
+        {
+            GetComponent<PlayerMovement>().forceSpeed = 0;
+            yield return new WaitForSeconds(0.4f);
+            GetComponent<PlayerMovement>().forceSpeed = GetComponent<PlayerMovement>().mForceSpeed;
+        }
+    }
+    public virtual IEnumerator Golpear()
     {
         speed = 0;
         golpeando = true;

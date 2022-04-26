@@ -14,7 +14,7 @@ public class Arma : MonoBehaviour
             if (!other.GetComponent<Unit>().isPlayer && other.GetComponent<Unit>().isZombie)
             {
                 other.GetComponent<Unit>().TakeDmg(1);
-                escopeta = false;
+                StartCoroutine(DesactivarEscopeta());
             }
         }
         if (lanzallamas)
@@ -24,5 +24,11 @@ public class Arma : MonoBehaviour
                 other.GetComponent<Unit>().Ignite();
             }
         }
+    }
+    
+    IEnumerator DesactivarEscopeta()
+    {
+        yield return null;
+        escopeta = false;
     }
 }
