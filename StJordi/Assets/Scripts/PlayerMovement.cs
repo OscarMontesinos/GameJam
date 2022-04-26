@@ -24,6 +24,7 @@ public class PlayerMovement : MonoBehaviour
     public float fireSpeed;
     public Arma arma;
     public bool lanzallamas;
+    public bool envenenado;
     // Start is called before the first frame update
     void Start()
     {
@@ -47,7 +48,7 @@ public class PlayerMovement : MonoBehaviour
             int aux = Random.Range(0, fireDelay + 1);
             if (aux == fireDelay)
             {
-                Instantiate(fuego, transform.position, transform.rotation);
+                Instantiate(fuego, transform.GetChild(2).transform.GetChild(0).transform.GetChild(1).transform.position, transform.rotation);
             }
 
             arma.lanzallamas = true;
@@ -133,11 +134,11 @@ public class PlayerMovement : MonoBehaviour
         }
         currentRecargaEscopeta = recargaEscopeta;
         //Podría usar un bucle al igual que G2 pudo ganar a Fun Plus Phoenix
-        Instantiate(bala,transform.position,transform.rotation);
-        Instantiate(bala,transform.position,transform.rotation);
-        Instantiate(bala,transform.position,transform.rotation);
-        Instantiate(bala,transform.position,transform.rotation);
-        Instantiate(bala,transform.position,transform.rotation);
+        Instantiate(bala, transform.GetChild(2).transform.GetChild(0).transform.GetChild(1).transform.position, transform.rotation);
+        Instantiate(bala, transform.GetChild(2).transform.GetChild(0).transform.GetChild(1).transform.position, transform.rotation);
+        Instantiate(bala, transform.GetChild(2).transform.GetChild(0).transform.GetChild(1).transform.position, transform.rotation);
+        Instantiate(bala, transform.GetChild(2).transform.GetChild(0).transform.GetChild(1).transform.position, transform.rotation);
+        Instantiate(bala, transform.GetChild(2).transform.GetChild(0).transform.GetChild(1).transform.position, transform.rotation);
         StartCoroutine(DisparoReset());
     }
 
@@ -156,6 +157,15 @@ public class PlayerMovement : MonoBehaviour
         if (collision.gameObject.tag == "Ground")
         {
             saltando = false;
+        }
+    }
+    public IEnumerator Envenenarse() 
+    {
+        envenenado = true;
+        yield return new WaitForSeconds(1.5f);
+        if (envenenado)
+        {
+            GetComponent<Unit>().TakeDmg(1);
         }
     }
 
