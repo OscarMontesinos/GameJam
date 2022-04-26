@@ -25,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
     public Arma arma;
     public bool lanzallamas;
     public bool envenenado;
+    Animator animator;
     // Start is called before the first frame update
     void Start()
     {
@@ -33,6 +34,7 @@ public class PlayerMovement : MonoBehaviour
         hitboxEscopeta = transform.GetChild(0).gameObject;
         balas = 2;
         fuegoMun = 25;
+        animator = GetComponent<Animator>();
     }
 
     private void Update()
@@ -122,6 +124,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Disparar()
     {
+        animator.SetTrigger("Disparar");
         fuegoMun += 10;
         if (fuegoMun > 50)
         {
@@ -130,6 +133,7 @@ public class PlayerMovement : MonoBehaviour
         balas--;
         if(balas == 0)
         {
+            animator.SetBool("Recargar", true);
             StartCoroutine(Recarga());
         }
         currentRecargaEscopeta = recargaEscopeta;
@@ -149,8 +153,9 @@ public class PlayerMovement : MonoBehaviour
     }
     IEnumerator Recarga()
     {
-        yield return new WaitForSeconds(1.3f);
+        yield return new WaitForSeconds(1.4f);
         balas = 2;
+        animator.SetBool("Recargar", false);
     }
     private void OnCollisionEnter(Collision collision)
     {
