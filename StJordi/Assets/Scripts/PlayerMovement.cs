@@ -92,8 +92,8 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        horizontalInput = Input.GetAxis("Horizontal");
-        verticalInput = Input.GetAxis("Vertical");
+        horizontalInput = -Input.GetAxis("Horizontal");
+        verticalInput = -Input.GetAxis("Vertical");
         if (playerPhysics.useGravity)
         {
             movement = new Vector3(horizontalInput, -10 * Time.deltaTime, verticalInput);

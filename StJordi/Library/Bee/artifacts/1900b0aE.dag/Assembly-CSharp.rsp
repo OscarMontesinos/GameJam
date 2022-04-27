@@ -349,6 +349,8 @@
 "Assets/Scripts/AudioManager.cs"
 "Assets/Scripts/Boss.cs"
 "Assets/Scripts/Brazos.cs"
+"Assets/Scripts/Camera.cs"
+"Assets/Scripts/CameraPoint.cs"
 "Assets/Scripts/PlayerMovement.cs"
 "Assets/Scripts/PowerUp.cs"
 "Assets/Scripts/Proyectil.cs"
